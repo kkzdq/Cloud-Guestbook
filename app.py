@@ -3,30 +3,32 @@ import datetime
 
 app = Flask(__name__)
 
-# 内存列表，用于临时存储留言
+# 内存列表
 messages = []
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # 获取前端表单发来的数据
+        # 1. 获取昵称和内容
+        nickname = request.form.get('nickname')
         content = request.form.get('content')
         
-        if content:
+        # 只有两个都填了才处理
+        if nickname and content:
             current_time = datetime.datetime.now().strftime('%H:%M:%S')
             
-            # --- 核心功能：在 SSH 控制台打印留言 ---
-            # 截图时，这里显示的内容就是证据
-            print(f"[{current_time}] 收到一条新留言: {content}")
+            # --- 控制台打印日志 ---
+            print(f"[{current_time}] 用户[{nickname}] 发送了: {content}")
             
-            # 将留言存入列表，插到最前面
-            messages.insert(0, {'text': content, 'time': current_time})
+            # 2. 存入字典，新增 name 字段
+            messages.insert(0, {
+                'name': nickname,
+                'text': content,
+                'time': current_time
+            })
             
-    # Flask 会自动去 templates 文件夹里找 index.html
     return render_template('index.html', messages=messages)
 
 if __name__ == '__main__':
-    print("--- 系统启动成功 ---")
-    print("正在监听端口 5000...")
-    # debug=True 可以在报错时显示具体原因，方便调试
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    print("--- 留言板已启动 ---")
+    app.run(host='0.0.0.0', port=5000, debug=False)
