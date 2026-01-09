@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极简留言板</title>
+    <style>
+        /* 全局样式重置 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+        }
+
+        /* --- 背景设置：调用 Bing 每日壁纸接口 --- */
+        body {
+            background: url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=zh-CN') no-repeat center center fixed;
+            background-size: cover; /* 保证图片铺满屏幕 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- 容器样式：毛玻璃特效 (Glassmorphism) --- */
+        .container {
+            background: rgba(255, 255, 255, 0.75); /* 白色半透明 */
+            backdrop-filter: blur(12px);            /* 模糊背景 */
+            -webkit-backdrop-filter: blur(12px);    /* 兼容 Safari */
+            border-radius: 16px;
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        /* 表单样式 */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #d93025; /* 红 */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #b92b1f;
+        }
+
+        /* 留言列表样式 */
+        ul {
+            list-style: none;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto; /* 内容多了可以滚动 */
+        }
+
+        li {
+            background: rgba(255, 255, 255, 0.9);
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .msg-text { font-size: 15px; color: #222; }
+        .msg-time { font-size: 12px; color: #888; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>☁️ 云端留言墙</h1>
+        
+        <form method="post" class="input-group">
+            <input type="text" name="content" placeholder="在这里写下你的想法..." required autocomplete="off">
+            <button type="submit">发送</button>
+        </form>
+
+        <ul>
+            {% for msg in messages %}
+            <li>
+                <span class="msg-text">{{ msg.text }}</span>
+                <span class="msg-time">{{ msg.time }}</span>
+            </li>
+            {% else %}
+            <li style="justify-content: center; color: #666;">暂时没有留言，抢个沙发吧！</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>
