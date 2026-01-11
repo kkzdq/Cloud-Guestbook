@@ -36,36 +36,58 @@
 
         h1 { color: #333; text-align: center; margin-top: 0; margin-bottom: 20px;}
 
-        /* 表单布局 */
+        /* 表单整体布局：保持垂直，让内容框在第一行 */
         .form-column {
             display: flex;
-            flex-direction: column; /* 垂直方向堆叠 */
-            gap: 15px; /* 控件之间的间距 */
+            flex-direction: column;
+            gap: 15px; 
             margin-bottom: 25px;
         }
 
-        input {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            outline: none;
-            width: 100%; /* 占满容器 */
-            box-sizing: border-box; /* 防止边框撑大宽度 */
-            font-size: 14px;
+        /* --- 新增：底部第二行（昵称+按钮）的布局 --- */
+        .form-row-bottom {
+            display: flex;
+            gap: 10px; /* 昵称和按钮之间的间距 */
         }
 
-        /* 按钮 */
+        /* 这是一个小补丁：确保放在 flex 里的输入框能自动填满剩余宽度 */
+        .form-row-bottom input {
+            flex: 1; /* 占据除按钮外的所有空间 */
+            width: 100%; /* 覆盖全局的 width:100% */
+        }
+
+        input {
+            height: 48px;       /* 强制固定高度，确保上下一样高 */
+            padding: 0 12px;    /* 上下padding设为0，靠line-height居中，左右保持12 */
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+            width: 100%; 
+            box-sizing: border-box;
+            font-size: 14px;
+            line-height: 46px;  /* (高度48 - 边框2) 保证文字垂直居中 */
+        }
+
+        /* 按钮修改：去掉 width: 20%，改为 auto 或固定像素 */
         button {
-            padding: 12px;
+            height: 48px;       /* 核心修改：高度与输入框完全一致 */
+            padding: 0 12px;    /* 上下padding设为0 */
             background-color: #d93025;
             color: white;
-            border: none;
-            border-radius: 8px;
+            border: none;       /* 按钮没有边框 */
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
             transition: background 0.3s;
-            width: 20%;
+            
+            width: 25%;
+            white-space: nowrap;
+            
+            /* 确保垂直对齐 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         button:hover { background-color: #b92b1f; }
 
@@ -124,12 +146,15 @@
         
         <!-- 垂直布局 -->
         <form method="post" class="form-column">
-            <!-- 昵称输入框 -->
-            <input type="text" name="nickname" placeholder="你的昵称" required autocomplete="off">
-            <!-- 内容输入框 -->
+            
+            <!-- 第一行：内容输入框 (单独占一行) -->
             <input type="text" name="content" placeholder="说点什么..." required autocomplete="off">
             
-            <button type="submit">发 送</button>
+            <!-- 第二行：昵称 + 按钮 -->
+            <div class="form-row-bottom">
+                <input type="text" name="nickname" placeholder="你的昵称" required autocomplete="off">
+                <button type="submit">发 送</button>
+            </div>
         </form>
 
         <ul>
